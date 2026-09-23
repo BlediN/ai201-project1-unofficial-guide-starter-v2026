@@ -23,8 +23,10 @@ For at least 4 of my 5 test questions, the retrieved chunks include one that
 contains the answer.
 
 **Why this target:**
-<!-- e.g. "One of my questions is about a topic only two documents mention, so
-     I expect that one to be hard." -->
+I picked 4 of 5 because most of my test questions should have a direct answer
+somewhere in the guide, but one question might use different wording than the
+document uses. Requiring 5 of 5 would be too strict for a first retrieval setup,
+while 3 of 5 would mean the system is missing too many normal questions.
 
 ---
 
@@ -33,8 +35,10 @@ contains the answer.
 Every answer the system produces names at least one source document.
 
 **Why this target:**
-<!-- Why all five and not four? What about your setup makes that achievable —
-     or what would have to go wrong for it not to be? -->
+I picked all five because the system should already know which document each
+retrieved chunk came from. If an answer cannot name a source, then the reader
+has no easy way to check whether the answer came from the guide or from the
+model guessing.
 
 ---
 
@@ -50,47 +54,37 @@ in at least 4 of 5 tries.
      just keep five of them, or the "4 of 5" above has nothing to be 4 of. -->
 
 **Why this target:**
-<!-- What did your distances look like when you set the cutoff in Milestone 4?
-     Was there a clean gap, or did the two groups overlap? -->
+I picked 4 of 5 because some out-of-scope questions may still use words that
+sound similar to the guide, so one false match is possible. A lower target would
+let the system answer too many questions that the documents do not actually
+cover.
 
 ---
 
 ## 4. Something about your chunks
 
-<!-- YOU WRITE THIS ONE.
-
-     How would you know if your chunks were the right size? Name something
-     countable or observable.
-
-     Examples of the right shape — don't copy these, they should come from
-     what you actually saw in Milestone 3:
-       - "At least 4 of 5 sampled chunks read as a complete thought, with no
-          sentence cut in half at either end."
-       - "No chunk is shorter than 200 characters, since anything below that
-          in my corpus turned out to be a heading with no content under it." -->
-
-
+Each chunk should usually be 150-200 words, and it should focus on one clear
+topic, section, or idea. If a chunk mixes multiple unrelated ideas or is shorter
+than 75 words without a good reason, it should be revised.
 
 **Why this target:**
-
+I picked 150-200 words because that is long enough to include useful context
+around an answer, but short enough that one chunk should not cover several
+different topics at once. A stricter range would create too many tiny fragments,
+and a looser range would make retrieval less precise.
 
 
 ---
 
-## 5. Your choice
+## 5. My choice
 
-<!-- YOU WRITE THIS ONE TOO.
-
-     Pick something you actually care about getting right. It could be about
-     speed, about refusals, about a particular kind of question your corpus
-     handles badly, about source attribution being correct rather than merely
-     present — anything, as long as it names a number or an observable
-     outcome. -->
-
-
+For at least 4 of my 5 in-scope test questions, the named source should directly
+support the main answer instead of only being related to the same broad topic.
 
 **Why this target:**
-
+I picked this because naming a source is only useful if the source actually
+backs up the answer. I chose 4 of 5 because one question might be answered
+across more than one chunk, but 3 of 5 would make the citations too unreliable.
 
 
 ---
