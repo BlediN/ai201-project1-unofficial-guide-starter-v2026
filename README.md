@@ -31,18 +31,18 @@ cover a question, the relevance gate should refuse instead of guessing.
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size:** about 150-200 words when a document is long enough to split.
+For this corpus, most posts are shorter than that, so one post usually stays as
+one chunk.
 
-<!-- What about YOUR documents made you pick these numbers? Short posts and
-     long sectioned guides don't want the same chunking, and "800 seemed
-     reasonable" earns nothing. Point at something you noticed when you read
-     the documents in Milestone 1.
+**Overlap:** 25 words, but only when a long section actually has to be split.
 
-     If you changed your mind partway through, say so and say why. That's worth
-     more than pretending you got it right first time.
-
-     Milestone 3. -->
+I picked this because `campus_life` is made of short student-life posts, and
+the starter summary showed 88 documents becoming 88 chunks. That means one post
+was already usually one complete thought, so splitting every post smaller would
+mostly remove useful context. I still replaced the starter chunker so that if a
+post is longer, it splits on paragraph or sentence boundaries instead of
+cutting blindly at 800 characters.
 
 ## Sample Chunks
 
