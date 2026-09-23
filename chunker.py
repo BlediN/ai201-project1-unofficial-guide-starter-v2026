@@ -23,6 +23,7 @@ your pipeline, not giving up.
 """
 
 from dataclasses import dataclass
+import re
 
 import config
 from ingest import Document
@@ -97,7 +98,96 @@ def split_documents(documents: list[Document]) -> list[Chunk]:
       - Would splitting on paragraph breaks keep more thoughts intact than
         splitting on a character count?
     """
-    return fallback_split(documents)
+    target_words = 180
+    max_words = 200
+    overlap_words = 25
+
+    chunks: list[Chunk] = []
+    for doc in documents:
+        sections = _semantic_sections(doc.text)
+        current: list[str] = []
+        current_words = 0
+        index = 0
+
+        for section in sections:
+            section_words = len(section.split())
+
+            if section_words > max_words:
+                if current:
+                    chunks.append(_make_chunk(doc, current, index))
+                    index += 1
+                    current = []
+                    current_words = 0
+
+                for piece in _split_long_section(section, max_words, overlap_words):
+                    chunks.append(
+                        Chunk(
+                            text=piece,
+                            source=doc.source,
+                            index=index,
+                            produced_by="chunker.py::split_documents",
+                        )
+                    )
+                    index += 1
+                continue
+
+            would_exceed = current and current_words + section_words > max_words
+            good_place_to_stop = current_words >= target_words
+            if would_exceed or good_place_to_stop:
+                chunks.append(_make_chunk(doc, current, index))
+                index += 1
+                current = []
+                current_words = 0
+
+            current.append(section)
+            current_words += section_words
+
+        if current:
+            chunks.append(_make_chunk(doc, current, index))
+
+    return chunks
+
+
+def _semantic_sections(text: str) -> list[str]:
+    """Prefer paragraph breaks, then sentence breaks, over raw character cuts."""
+    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
+    sections: list[str] = []
+    for paragraph in paragraphs:
+        if len(paragraph.split()) <= 200:
+            sections.append(paragraph)
+        else:
+            sections.extend(_sentences(paragraph))
+    return sections
+
+
+def _sentences(text: str) -> list[str]:
+    return [s.strip() for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
+
+
+def _split_long_section(text: str, max_words: int, overlap_words: int) -> list[str]:
+    words = text.split()
+    pieces: list[str] = []
+    start = 0
+    step = max_words - overlap_words
+
+    while start < len(words):
+        piece = " ".join(words[start : start + max_words]).strip()
+        if piece:
+            pieces.append(piece)
+        if start + max_words >= len(words):
+            break
+        start += step
+
+    return pieces
+
+
+def _make_chunk(doc: Document, parts: list[str], index: int) -> Chunk:
+    return Chunk(
+        text="\n\n".join(parts).strip(),
+        source=doc.source,
+        index=index,
+        produced_by="chunker.py::split_documents",
+    )
 
 
 def describe(chunks: list[Chunk]) -> str:
