@@ -21,11 +21,13 @@
 
 ## What This Does
 
-<!-- Three or four sentences. Which corpus you picked, and the kinds of
-     questions your system answers. Write it for someone who has never seen
-     this repo.
-
-     Milestone 5. -->
+This project is a retrieval system for the `campus_life` corpus, which is a
+set of short posts about student life at a university. It answers questions
+about campus rules, housing, dining, courses, registration, and other practical
+student issues by retrieving relevant chunks from those documents. The system
+uses the retrieved chunks to write an answer and names the source document so
+the reader can check where the information came from. If the documents do not
+cover a question, the relevance gate should refuse instead of guessing.
 
 ## Chunking Strategy
 
@@ -113,13 +115,27 @@ Laundry costs $1.75 wash, $1.75 dry, app-based. On noise: moderate; the building
      visible. Milestone 4. -->
 
 **Question:**
+```
+How does the housing lottery work for juniors and seniors?
+```
 
 **Answer:**
 
 ```
+For juniors and seniors, the housing lottery orders students by accumulated credit hours first, and only uses a random draw as a tie-breaker. 
+
+Source: admin_housing_lottery.txt
+
+Sources retrieved: admin_housing_lottery.txt, advising_registration.txt, housing_old_brewhouse.txt, housing_tamsin_court.txt
+
+1 model calls this session, 592 tokens (552 in, 40 out)
 ```
 
 **My relevance cutoff:**
+```
+0.6
+My five in-corpus questions had best distances from 0.184 to 0.224. My five out-of-scope questions had best distances from 0.825 to 0.934. I picked 0.6 because it sits clearly between those two groups: it lets the real campus_life questions through and refuses the unrelated questions.
+```
 
 <!-- The number you set in config.py, and how you got there.
 
@@ -136,18 +152,15 @@ Laundry costs $1.75 wash, $1.75 dry, app-based. On noise: moderate; the building
 
 ## How I Used AI
 
-<!-- Two specific moments. For each: what you asked for, what came back, and
-     what you changed about it.
+**1.** I asked AI to help turn the acceptance-criteria instructions into
+specific criteria with numbers. The first draft gave me a chunk-size target and
+a source-usefulness target, and I changed the chunk-size range to 150-200 words
+because that matched what I wanted to check for my chunks.
 
-     "I asked Claude to write the chunking function from my notes. It ignored
-     the overlap, so I added that myself" is the level of detail we're after.
-     "I used AI to help me code" is not.
-
-     Milestone 5. -->
-
-**1.**
-
-**2.**
+**2.** I asked AI to help replace the starter chunker after I saw that
+`campus_life` had 88 documents and 88 chunks. The suggested change kept short
+posts together but split longer text on paragraph or sentence boundaries, which
+fit this corpus better than blindly cutting every 800 characters.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
