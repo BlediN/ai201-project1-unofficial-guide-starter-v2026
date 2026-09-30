@@ -275,23 +275,18 @@ complete short post together preserves the answer and its context.
 
 ## Diagnoses
 
-<!-- For each miss: which stage caused it, and how. The stage alone isn't
-     enough — you need the mechanism.
+No criteria were missed, so there is no failed question or pipeline stage to
+diagnose from this run. All five in-scope questions retrieved a chunk containing
+the answer, all answers named supporting sources, and the relevance gate
+refused all five out-of-corpus questions.
 
-     Not a diagnosis: "Question 3 didn't work."
-     A diagnosis:     "Question 3 asks about laundry costs. The answer is in
-                       one sentence that got split across two chunks, so
-                       neither chunk on its own contains it."
-
-     The five stages: loading → chunking → embedding → retrieval → generation.
-
-     Look for a pattern. If three misses all ask about numbers, that's one
-     problem, not three.
-
-     Missed nothing? Say so, then say honestly whether your targets were set
-     low, and which one you'd tighten and to what.
-
-     Milestone 3. -->
+The targets were somewhat safe because the corpus contains short, direct posts
+and the five test questions were closely matched to those documents. I would
+tighten criterion 4. Instead of saying that chunks should usually be 150-200
+words and judging that by inspection, I would require at least 80% of chunks to
+be 150-200 words or to be shorter complete source posts, while still requiring
+each chunk to focus on one topic. This would make the chunking target more
+challenging and measurable.
 
 ## The Improvement
 
