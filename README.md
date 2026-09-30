@@ -148,7 +148,16 @@ My five in-corpus questions had best distances from 0.184 to 0.224. My five out-
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| How long do I have to add a course, and when does dropping a course start showing as a W? | Yes | 0.2145 |
+| Do dining dollars roll over from spring to the following autumn? | Yes | 0.2037 |
+| How does the housing lottery work for juniors and seniors? | Yes | 0.1841 |
+| How many writing-intensive courses are required for graduation, and where must they be taken? | Yes | 0.2240 |
+| When can students change their meal plan tier? | Yes | 0.2167 |
+| What is the capital of Mongolia? | No | 0.825 |
+| How do I change the oil in a diesel engine? | No | 0.934 |
+| Who won the 1994 World Cup? | No | 0.886 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.844 |
+| How do I write a for loop in Rust? | No | 0.896 |
 
 ## How I Used AI
 
@@ -161,6 +170,14 @@ because that matched what I wanted to check for my chunks.
 `campus_life` had 88 documents and 88 chunks. The suggested change kept short
 posts together but split longer text on paragraph or sentence boundaries, which
 fit this corpus better than blindly cutting every 800 characters.
+
+**3.** In this unit, I used AI to help compare the before and after results and
+spot that the chunking change did not move any retrieval distances or criterion
+totals. I kept that result instead of claiming the change helped.
+
+**4.** I also used AI to check that the Milestone 2 and Milestone 3 write-up
+matched the measured results, especially the distinction between a missed
+criterion and a criterion that should be made more measurable.
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
@@ -352,17 +369,19 @@ change made the short-document rule more explicit, but it did not change the
 
 ## What's Still Broken
 
-<!-- For each criterion still missed after your fix: what you'd do about it,
-     and why you stopped where you did.
-
-     "I ran out of time" is fine if it's true. Pretending nothing is left is
-     not.
-
-     Milestone 5. -->
+No acceptance criterion is still missed after the fix: all five criteria are
+MET before and after, and the after run still refused all five out-of-corpus
+questions. However, the chunking improvement did not change the index or the
+retrieval distances because every source post is already shorter than 100
+words. The remaining weakness is that the chunking criterion is difficult to
+test meaningfully on this corpus. I stopped after one focused change because
+the assignment asks for one measured improvement; a second change would make
+it harder to tell what caused the result.
 
 ## What I'd Do Differently
 
-<!-- Knowing what you know now — which of your five criteria would you write
-     differently, and why?
-
-     Milestone 5. -->
+I would write criterion 4 differently. The original 150-200 word target does
+not fit this corpus, whose documents are only 31-98 words long. Next time I
+would require at least 80% of chunks to be 150-200 words or to be shorter
+complete source posts, while requiring every chunk to focus on one topic. That
+version is measurable and still respects the actual shape of the corpus.
