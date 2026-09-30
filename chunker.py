@@ -104,6 +104,10 @@ def split_documents(documents: list[Document]) -> list[Chunk]:
 
     chunks: list[Chunk] = []
     for doc in documents:
+        if len(doc.text.split()) <= max_words:
+            chunks.append(_make_chunk(doc, [doc.text], 0))
+            continue
+
         sections = _semantic_sections(doc.text)
         current: list[str] = []
         current_words = 0

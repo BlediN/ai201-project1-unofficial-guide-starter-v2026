@@ -290,9 +290,19 @@ challenging and measurable.
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** I changed `chunker.py::split_documents` so that any source
+document with 200 words or fewer is kept as one complete chunk before the
+semantic splitter handles longer documents. I rebuilt the index as the
+`after` variant and reran the same evaluation.
 
-**Why I picked it:**
+**Why I picked it:** My diagnosis identified chunking as the least measurable
+criterion. The corpus has 88 short posts, all between 31 and 98 words, so
+explicitly preserving each short post keeps its complete context and makes the
+chunking rule clear without breaking these small documents.
+
+The after run was produced by `run_eval.py::main` and is recorded in
+`results/run_2026-09-30_0021_after.md`. It used the `after` index built by
+`app.py::cmd_index`.
 
 <!-- Connect it to a specific diagnosis above in one sentence. If you can't,
      you picked a fix because it sounded impressive. -->
@@ -304,13 +314,34 @@ challenging and measurable.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks are focused and usually 150-200 words | 150-200 words, focused | MET | MET | MET | MET |
+| 5. Named source directly supports the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+
+The after run's relevance gate output was:
+
+```
+Produced by `run_eval.py::check_out_of_scope`, cutoff 0.6. Refused 5 of 5.
+```
+
+One real answer from run 1 in `results/run_2026-09-30_0021_after.md` was:
+
+```
+You can add a course through the end of the second week, and dropping a course starts showing as a W on your transcript after week two (through the end of week six).
+
+Source: admin_add_drop_deadline.txt
+```
 
 **Did it help?**
+
+No. The results were identical before and after: all five in-scope questions
+were answered successfully in all three runs, and the gate refused 5 of 5
+out-of-scope questions. The best distances also stayed the same, such as
+0.2145 for the add/drop question and 0.1841 for the housing question. The
+change made the short-document rule more explicit, but it did not change the
+88-chunk index or improve the measured retrieval results.
 
 <!-- Say plainly whether it did, and how you know. If it made things worse,
      say that — a change that backfired, honestly reported, earns full credit
